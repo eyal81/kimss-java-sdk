@@ -78,7 +78,9 @@ Do **not** send Kimss API keys as `Authorization: Bearer`.
 ## Publish (maintainers)
 
 1. Claim / register Maven Central namespace `com.kimss`.
-2. Configure GitHub secrets on the public mirror for Central publishing + GPG.
-3. Tag `v0.1.0` on the public mirror to run `.github/workflows/publish.yml`.
+2. On first publish to the public mirror, copy `ci-templates/publish.yml` → `.github/workflows/publish.yml` and `ci-templates/ci.yml` → `.github/workflows/ci.yml` (requires a PAT with **`workflow`** scope; subtree mirror cannot push `.github/workflows` with deploy keys or OAuth tokens lacking that scope).
+3. Configure GitHub secrets on the public mirror for Central publishing + GPG.
+4. Tag `v0.1.0` on the public mirror to run publish.
 
-See [docs/llm-context.md](docs/llm-context.md) for IDE-agent setup.
+See monorepo `plans/2026-07-23-kimss-java-sdk-release-routine.md`.
+

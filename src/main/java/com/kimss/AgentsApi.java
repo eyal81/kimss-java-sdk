@@ -25,7 +25,7 @@ public final class AgentsApi {
 
   public AgentRunResult run(String assistantId, String message, String conversationId, boolean stream) {
     if (stream) {
-      throw new UnsupportedOperationException("Streaming is not implemented in kimss-java 0.1.1; use stream=false");
+      throw new UnsupportedOperationException("Streaming is not implemented in kimss-java 0.1.2; use stream=false");
     }
     String aid = assistantId == null ? "" : assistantId.trim();
     String msg = message == null ? "" : message;

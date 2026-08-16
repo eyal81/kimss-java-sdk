@@ -5,7 +5,7 @@ Pair with [README.md](../README.md).
 ## Clean machine checklist
 
 1. JDK **11+**.
-2. Add Maven/Gradle dependency `com.kimss:kimss-java` (or use JDK `HttpClient` + `X-Kimss-Key` until Central publish is live).
+2. Add Maven/Gradle dependency `ai.kimss:kimss-java` (or use JDK `HttpClient` + `X-Kimss-Key` until Central publish is live).
 3. Env: `KIMSS_API_KEY` (required). Optional: `KIMSS_BASE_URL` (default `https://api.kimss.ai`).
 4. Preferred call: `KimssClient.fromEnv().agents().run(assistantId, "Hello!")` → `POST /v1/agents/run`.
 5. Auth: **`X-Kimss-Key`** only for API keys — never `Authorization: Bearer` for Kimss keys.

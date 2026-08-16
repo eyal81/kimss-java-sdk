@@ -1,6 +1,6 @@
 # Kimss Java SDK
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.kimss/kimss-java)](https://central.sonatype.com/artifact/com.kimss/kimss-java)
+[![Maven Central](https://img.shields.io/maven-central/v/ai.kimss/kimss-java)](https://central.sonatype.com/artifact/ai.kimss/kimss-java)
 [![License: MIT](https://img.shields.io/badge/License-MIT-indigo.svg)](LICENSE)
 [![CI](https://github.com/eyal81/kimss-java-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/eyal81/kimss-java-sdk/actions/workflows/ci.yml)
 
@@ -28,7 +28,7 @@ Source of truth: monorepo path `kimssApi/kimss_java_sdk/`. Public GitHub is a su
 
 ```xml
 <dependency>
-  <groupId>com.kimss</groupId>
+  <groupId>ai.kimss</groupId>
   <artifactId>kimss-java</artifactId>
   <version>0.1.1</version>
 </dependency>
@@ -37,7 +37,7 @@ Source of truth: monorepo path `kimssApi/kimss_java_sdk/`. Public GitHub is a su
 ### Gradle
 
 ```kotlin
-implementation("com.kimss:kimss-java:0.1.1")
+implementation("ai.kimss:kimss-java:0.1.1")
 ```
 
 > **To route traffic, you must create a free control plane namespace. [Get your API key at kimss.ai](https://kimss.ai/app/signup) (25,000 governed requests/mo included. No credit card).**
@@ -92,7 +92,7 @@ Do **not** send Kimss API keys as `Authorization: Bearer`.
 
 ## Publish (maintainers)
 
-1. Claim / register Maven Central namespace `com.kimss`.
+1. Claim / register Maven Central namespace `ai.kimss` (domain `kimss.ai`). `com.kimss` is not available — that namespace requires `kimss.com`.
 2. On first publish to the public mirror, copy `ci-templates/publish.yml` → `.github/workflows/publish.yml` and `ci-templates/ci.yml` → `.github/workflows/ci.yml` (requires a PAT with **`workflow`** scope; subtree mirror cannot push `.github/workflows` with deploy keys or OAuth tokens lacking that scope).
 3. Configure GitHub secrets on the public mirror for Central publishing + GPG.
 4. Tag `v0.1.1` on the public mirror to run publish.

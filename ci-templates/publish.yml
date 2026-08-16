@@ -1,7 +1,7 @@
 name: Publish to Maven Central
 
 # Requires Central portal credentials + GPG on the public mirror repo.
-# Enable profile -Ppublish after Sonatype namespace com.kimss is approved.
+# Enable profile -Ppublish after Sonatype namespace ai.kimss is approved.
 
 on:
   push:

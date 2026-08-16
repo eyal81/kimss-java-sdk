@@ -2,7 +2,9 @@
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.kimss/kimss-java)](https://central.sonatype.com/artifact/com.kimss/kimss-java)
 
-Official Java client for the [Kimss](https://kimss.ai) governed AI API.
+Your AI traffic is probably unmanaged: provider keys hardcoded in config files, services calling models directly, no record of who made which call and no way to stop the next one. That is **Shadow AI**.
+
+[Kimss](https://kimss.ai) is an **Enterprise Agent Control Plane** — a zero-trust gateway that sits in front of the model endpoints you already own. This SDK is the Java integration layer: it routes your calls through the Kimss gateway (`X-Kimss-Key`), where every request gets identity, a governed audit trail, and a kill switch. Kimss never hosts your models and never charges for inference compute.
 
 Source of truth: monorepo path `kimssApi/kimss_java_sdk/`. Public GitHub is a subtree mirror (same pattern as the Python SDK).
 
@@ -28,6 +30,10 @@ Source of truth: monorepo path `kimssApi/kimss_java_sdk/`. Public GitHub is a su
 ```kotlin
 implementation("com.kimss:kimss-java:0.1.0")
 ```
+
+> **To route traffic, you must create a free control plane namespace. [Get your API key at kimss.ai](https://kimss.ai/app/signup) (25,000 governed requests/mo included. No credit card).**
+>
+> The Developer tier is always free — 25,000 governed requests/month, 14-day telemetry retention, no expiration cliff.
 
 Until the artifact is on Maven Central, use a local install:
 

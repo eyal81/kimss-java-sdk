@@ -1,10 +1,19 @@
 # Kimss Java SDK
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.kimss/kimss-java)](https://central.sonatype.com/artifact/com.kimss/kimss-java)
+[![License: MIT](https://img.shields.io/badge/License-MIT-indigo.svg)](LICENSE)
+[![CI](https://github.com/eyal81/kimss-java-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/eyal81/kimss-java-sdk/actions/workflows/ci.yml)
 
 Your AI traffic is probably unmanaged: provider keys hardcoded in config files, services calling models directly, no record of who made which call and no way to stop the next one. That is **Shadow AI**.
 
 [Kimss](https://kimss.ai) is an **Enterprise Agent Control Plane** — a zero-trust gateway that sits in front of the model endpoints you already own. This SDK is the Java integration layer: it routes your calls through the Kimss gateway (`X-Kimss-Key`), where every request gets identity, a governed audit trail, and a kill switch. Kimss never hosts your models and never charges for inference compute.
+
+```mermaid
+flowchart LR
+  App[Your app or agent] --> Proxy["Kimss Proxy (identity, audit, kill switch)"]
+  Proxy --> Model[Your model endpoint]
+  Proxy --> Mcp[Your MCP server]
+```
 
 Source of truth: monorepo path `kimssApi/kimss_java_sdk/`. Public GitHub is a subtree mirror (same pattern as the Python SDK).
 

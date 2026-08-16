@@ -30,14 +30,14 @@ Source of truth: monorepo path `kimssApi/kimss_java_sdk/`. Public GitHub is a su
 <dependency>
   <groupId>com.kimss</groupId>
   <artifactId>kimss-java</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```kotlin
-implementation("com.kimss:kimss-java:0.1.0")
+implementation("com.kimss:kimss-java:0.1.1")
 ```
 
 > **To route traffic, you must create a free control plane namespace. [Get your API key at kimss.ai](https://kimss.ai/app/signup) (25,000 governed requests/mo included. No credit card).**
@@ -95,7 +95,7 @@ Do **not** send Kimss API keys as `Authorization: Bearer`.
 1. Claim / register Maven Central namespace `com.kimss`.
 2. On first publish to the public mirror, copy `ci-templates/publish.yml` → `.github/workflows/publish.yml` and `ci-templates/ci.yml` → `.github/workflows/ci.yml` (requires a PAT with **`workflow`** scope; subtree mirror cannot push `.github/workflows` with deploy keys or OAuth tokens lacking that scope).
 3. Configure GitHub secrets on the public mirror for Central publishing + GPG.
-4. Tag `v0.1.0` on the public mirror to run publish.
+4. Tag `v0.1.1` on the public mirror to run publish.
 
 See monorepo `plans/2026-07-23-kimss-java-sdk-release-routine.md`.
 

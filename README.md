@@ -44,7 +44,7 @@ implementation("ai.kimss:kimss-java:0.1.2")
 >
 > The Developer tier is always free — 25,000 governed requests/month, 14-day telemetry retention, no expiration cliff.
 
-Until the artifact is on Maven Central, use a local install:
+Local install from a clone (optional):
 
 ```bash
 cd kimss_java_sdk

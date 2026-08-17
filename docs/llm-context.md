@@ -1,6 +1,6 @@
 # Kimss Java SDK — LLM / IDE context
 
-Pair with [README.md](../README.md).
+Pair with [README.md](../README.md) and [KIMSS_ONBOARDING.md](KIMSS_ONBOARDING.md).
 
 ## Clean machine checklist
 

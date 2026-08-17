@@ -6,7 +6,25 @@
 
 Your AI traffic is probably unmanaged: provider keys hardcoded in config files, services calling models directly, no record of who made which call and no way to stop the next one. That is **Shadow AI**.
 
-[Kimss](https://kimss.ai) is an **Enterprise Agent Control Plane** — a zero-trust gateway that sits in front of the model endpoints you already own. This SDK is the Java integration layer: it routes your calls through the Kimss gateway (`X-Kimss-Key`), where every request gets identity, a governed audit trail, and a kill switch. Kimss never hosts your models and never charges for inference compute.
+[Kimss](https://kimss.ai) is a **Secure AI Gateway** and **Governance Control Plane** that sits in front of the model endpoints you already own. This SDK is the Java integration layer: it routes your calls through the Kimss gateway (`X-Kimss-Key`), where every request gets identity, a governed audit trail, and a kill switch. Kimss never hosts your models and never charges for inference compute.
+
+**30-second drop-in** (official OpenAI Java client):
+
+```java
+OpenAIClient client = OpenAIOkHttpClient.builder()
+    .baseUrl("https://api.kimss.ai/v1")
+    .apiKey("kimss_...")
+    .build();
+```
+
+**Developer tier (Always Free):** 25,000 governed requests/month, 14-day telemetry, 5 builder & admin seats. No credit card. [Get a key](https://kimss.ai/app/signup).
+
+| Inbound | Vaulted BYO |
+|---------|-------------|
+| OpenAI Java client → `https://api.kimss.ai/v1` | OpenAI, Azure AI Foundry, Anthropic, DeepSeek, vLLM |
+| Native `KimssClient` → `https://api.kimss.ai` | Internal MCP servers |
+
+**New here?** [GETTING_STARTED.md](GETTING_STARTED.md). **AI assistants:** [docs/KIMSS_ONBOARDING.md](docs/KIMSS_ONBOARDING.md).
 
 ```mermaid
 flowchart LR

@@ -1,0 +1,9 @@
+# Kimss Java SDK
+
+Follow docs/KIMSS_ONBOARDING.md when integrating Kimss.
+
+- OpenAI OkHttp client: baseUrl https://api.kimss.ai/v1, apiKey kimss_...
+- Native: KimssClient.builder().baseUrl("https://api.kimss.ai").apiKey(...).build(); agents().run(id, message). No agents().get().
+- Native auth is X-Kimss-Key only.
+- Do not rewrite Anthropic/Azure official clients to Kimss inbound URLs.
+- Kill switch: agent_disabled. Never "zero-trust". Keys are kimss_...

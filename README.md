@@ -17,7 +17,7 @@ OpenAIClient client = OpenAIOkHttpClient.builder()
     .build();
 ```
 
-**Developer tier (Always Free):** 25,000 governed requests/month, 14-day telemetry, 5 builder & admin seats. No credit card. [Get a key](https://kimss.ai/app/signup).
+**Developer tier (Always Free):** 25,000 governed requests/month, 14-day telemetry, up to 5 workspace members. No credit card. [Get a key](https://kimss.ai/app/signup).
 
 | Inbound | Vaulted BYO |
 |---------|-------------|

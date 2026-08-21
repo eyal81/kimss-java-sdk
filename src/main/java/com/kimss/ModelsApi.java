@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * Model completions API ({@code POST /v1/models/completions}).
+ *
+ * @deprecated Prefer OpenAI {@code chat.completions} via {@code https://api.kimss.ai/v1}.
  */
 public final class ModelsApi {
   private final KimssClient client;
@@ -16,6 +18,10 @@ public final class ModelsApi {
     this.client = client;
   }
 
+  /**
+   * @deprecated Use OpenAI OkHttp gateway proxy instead.
+   */
+  @Deprecated
   public JsonNode create(String modelId, List<Message> messages) {
     String mid = modelId == null ? "" : modelId.trim();
     if (mid.isEmpty()) {

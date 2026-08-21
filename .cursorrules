@@ -1,9 +1,12 @@
-# Kimss Java SDK
+# Kimss Java SDK — AI assistants
 
-Follow docs/KIMSS_ONBOARDING.md when integrating Kimss.
+Follow [AI_INTEGRATION.md](AI_INTEGRATION.md) for every integration.
 
-- OpenAI OkHttp client: baseUrl https://api.kimss.ai/v1, apiKey kimss_...
-- Native: KimssClient.builder().baseUrl("https://api.kimss.ai").apiKey(...).build(); agents().run(id, message). No agents().get().
-- Native auth is X-Kimss-Key only.
-- Do not rewrite Anthropic/Azure official clients to Kimss inbound URLs.
-- Kill switch: agent_disabled. Never "zero-trust". Keys are kimss_...
+1. Never use `KimssClient` for chat/completions.
+2. Always use the official OpenAI Java (OkHttp) client with `baseUrl("https://api.kimss.ai/v1")`.
+3. Always inject `X-Kimss-Agent-Id` and `X-Kimss-Agent-Name` as default headers.
+4. Vault Anthropic/Azure in Kimss; do not invent Anthropic inbound routes on api.kimss.ai.
+5. Hermis / interceptors: forward Agent-Id headers; never strip them.
+6. Kill switch: `agent_disabled`. Keys: `kimss_...`. Never “zero-trust”.
+
+Onboarding: [docs/KIMSS_ONBOARDING.md](docs/KIMSS_ONBOARDING.md).

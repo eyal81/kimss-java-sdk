@@ -1,56 +1,26 @@
-# Getting started with the Kimss Secure AI Gateway (Java)
+# Getting started — Kimss Java Gateway
 
-Route existing OpenAI-compatible traffic through Kimss in about five minutes. Kimss is the **Secure AI Gateway** and **Governance Control Plane**: identity, audit, kill switch, and a provider vault. You bring the models (**BYOI**).
+**Track, govern, and secure autonomous agents with exactly 1 line of code.**
 
-**Developer tier (Always Free):** 25,000 governed requests/month, 14-day telemetry retention, up to 5 workspace members. No credit card.
+## Step 1 — Sign In & Vault
 
-## Step 1 — Vault provider keys
+Vault your provider under **Governance → Connected Infrastructure**.
 
-Open **Governance → Provider Vault** (`/app/governance/custom-models`). Add your OpenAI, Azure OpenAI / Foundry, Anthropic, DeepSeek, or vLLM endpoint.
+## Step 2 — Mint Key
 
-## Step 2 — Generate a Gateway key
-
-**Gateway → Generate Key**. Copy the `kimss_...` secret once.
+**Gateway → Generate Key** → copy `kimss_...`.
 
 ## Step 3 — Route traffic
-
-### Zero-code `.env` (OpenAI Java client)
-
-```bash
-OPENAI_BASE_URL="https://api.kimss.ai/v1"
-OPENAI_API_KEY="kimss_your_kimss_key"
-```
-
-### Official OpenAI Java client
 
 ```java
 OpenAIClient client = OpenAIOkHttpClient.builder()
     .baseUrl("https://api.kimss.ai/v1")
-    .apiKey("kimss_your_kimss_key")
+    .apiKey(System.getenv("KIMSS_WORKSPACE_KEY"))
+    .putHeader("X-Kimss-Agent-Id", System.getenv("KIMSS_AGENT_ID"))
+    .putHeader("X-Kimss-Agent-Name", "My Agent")
     .build();
 ```
 
-### Native Kimss Java SDK
+Do not use `KimssClient` for chat/completions. Kill switch: HTTP 403 `agent_disabled`.
 
-```java
-KimssClient client = KimssClient.builder()
-    .apiKey(System.getenv("KIMSS_API_KEY"))
-    .baseUrl("https://api.kimss.ai")
-    .build();
-AgentRunResult result = client.agents().run("asst_...", "Hello from Java!");
-System.out.println(result.text());
-```
-
-Native Java uses header **`X-Kimss-Key`** (not Bearer). There is no `agents().get()` — call `agents().run(id, message)` directly.
-
-Official Anthropic and Azure OpenAI inbound adapters are not available. Vault those providers and call Kimss `/v1` with an OpenAI-compatible client.
-
-## Step 4 — Monitor and kill switch
-
-Disable the agent under **Governance → Agents**. Routed calls return HTTP **403** with code **`agent_disabled`**.
-
-## Related
-
-- [README.md](README.md)
-- [docs/KIMSS_ONBOARDING.md](docs/KIMSS_ONBOARDING.md)
-- [docs/llm-context.md](docs/llm-context.md)
+See [AI_INTEGRATION.md](AI_INTEGRATION.md).

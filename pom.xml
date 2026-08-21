@@ -6,11 +6,11 @@
 
   <groupId>ai.kimss</groupId>
   <artifactId>kimss-java</artifactId>
-  <version>0.1.2</version>
+  <version>0.2.0</version>
   <packaging>jar</packaging>
 
   <name>Kimss Java SDK</name>
-  <description>Official Java client for the Kimss governed AI API (agents.run, models.completions).</description>
+  <description>Kimss Secure AI Gateway residual Java client (prefer OpenAI OkHttp baseUrl https://api.kimss.ai/v1 for inference).</description>
   <url>https://github.com/eyal81/kimss-java-sdk</url>
 
   <licenses>

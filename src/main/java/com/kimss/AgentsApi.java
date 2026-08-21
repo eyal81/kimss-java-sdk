@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Agent orchestration API ({@code POST /v1/agents/run}).
+ *
+ * @deprecated Prefer the official OpenAI Java client with
+ *     {@code baseUrl("https://api.kimss.ai/v1")} and {@code X-Kimss-Agent-Id} headers.
+ *     See AI_INTEGRATION.md.
  */
 public final class AgentsApi {
   private final KimssClient client;
@@ -18,14 +22,20 @@ public final class AgentsApi {
    *
    * @param assistantId Kimss assistant / agent id
    * @param message     user text (sent as {@code usr_chat})
+   * @deprecated Use OpenAI OkHttp gateway proxy instead.
    */
+  @Deprecated
   public AgentRunResult run(String assistantId, String message) {
     return run(assistantId, message, null, false);
   }
 
+  /**
+   * @deprecated Use OpenAI OkHttp gateway proxy instead.
+   */
+  @Deprecated
   public AgentRunResult run(String assistantId, String message, String conversationId, boolean stream) {
     if (stream) {
-      throw new UnsupportedOperationException("Streaming is not implemented in kimss-java 0.1.2; use stream=false");
+      throw new UnsupportedOperationException("Streaming is not implemented in kimss-java 0.2.0; use stream=false");
     }
     String aid = assistantId == null ? "" : assistantId.trim();
     String msg = message == null ? "" : message;

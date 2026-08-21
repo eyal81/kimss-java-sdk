@@ -1,35 +1,40 @@
 # Kimss Java SDK — LLM / IDE context
 
-Pair with [README.md](../README.md) and [KIMSS_ONBOARDING.md](KIMSS_ONBOARDING.md).
+Pair with [AI_INTEGRATION.md](../AI_INTEGRATION.md), [README.md](../README.md), and [KIMSS_ONBOARDING.md](KIMSS_ONBOARDING.md).
 
 ## Clean machine checklist
 
 1. JDK **11+**.
-2. Add Maven/Gradle dependency `ai.kimss:kimss-java` (or use JDK `HttpClient` + `X-Kimss-Key`).
-3. Env: `KIMSS_API_KEY` (required). Optional: `KIMSS_BASE_URL` (default `https://api.kimss.ai`).
-4. Preferred call: `KimssClient.fromEnv().agents().run(assistantId, "Hello!")` → `POST /v1/agents/run`.
-5. Auth: **`X-Kimss-Key`** only for API keys — never `Authorization: Bearer` for Kimss keys.
-6. Do not invent a Node `@kimss/sdk` package for JavaScript; use `fetch` + `X-Kimss-Key`.
+2. For **inference**: official OpenAI Java OkHttp client → `baseUrl("https://api.kimss.ai/v1")` + Agent-Id headers. No Kimss SDK required.
+3. Optional: Maven `ai.kimss:kimss-java` for legacy/control-plane residual only.
+4. Env: `KIMSS_WORKSPACE_KEY` or `KIMSS_API_KEY`, `KIMSS_AGENT_ID`.
+5. **Deprecated:** `KimssClient.agents().run`, `models().create`.
 
-## Request body for agents.run
+## Preferred inference
 
-```json
-{
-  "assistant_id": "asst_...",
-  "usr_chat": "Hello!",
-  "chat_type": "user_chat",
-  "stream": false
-}
+```java
+OpenAIClient client = OpenAIOkHttpClient.builder()
+    .baseUrl("https://api.kimss.ai/v1")
+    .apiKey(System.getenv("KIMSS_WORKSPACE_KEY"))
+    .putHeader("X-Kimss-Agent-Id", System.getenv("KIMSS_AGENT_ID"))
+    .putHeader("X-Kimss-Agent-Name", System.getenv().getOrDefault("KIMSS_AGENT_NAME", "My Agent"))
+    .build();
 ```
 
-Optional follow-up: `"thread_id": "<conversation_id>"`.
+## Control plane (REST / dashboard)
+
+| Concern | How |
+|---------|-----|
+| Kill switch | Governance UI or `POST /agent_set_status/` |
+| Audit | Gateway Recent calls; `POST /audit_log/` |
+| MCP sync | Control Plane / Connected Infrastructure UI |
+| Register agent | `POST /v1/agents/register` (HTTP + `X-Kimss-Key`) |
 
 ## Errors
 
 | HTTP | `detail.error` | Behavior |
 |------|----------------|----------|
+| 403 | `agent_disabled` | Kill switch — stop |
 | 403 | `subscription_required` | Stop; upgrade / switch workspace |
-| 429 | `credit_*` / trial exhausted | Stop; surface to user |
+| 429 | `governed_requests_exhausted` / `credit_*` | Stop; surface to user |
 | 429 | `rate_limit_exceeded` | Backoff / Retry-After |
-
-Thrown as `KimssException` with `httpStatus()` and `errorCode()`.

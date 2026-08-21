@@ -14,8 +14,12 @@ import java.time.Duration;
 import java.util.Objects;
 
 /**
- * Official Kimss Java client. Auth via {@code X-Kimss-Key}.
- * Preferred agent call: {@link #agents()}{@code .run(...)} → {@code POST /v1/agents/run}.
+ * Kimss Java client for residual control-plane / legacy HTTP helpers. Auth via {@code X-Kimss-Key}.
+ *
+ * <p><strong>Do not use for chat/completions.</strong> Prefer the official OpenAI OkHttp client with
+ * {@code baseUrl("https://api.kimss.ai/v1")} and {@code X-Kimss-Agent-Id} headers (see AI_INTEGRATION.md).
+ *
+ * <p>{@link #agents()}{@code .run(...)} and {@link #models()}{@code .create(...)} are {@code @Deprecated}.
  */
 public final class KimssClient {
   public static final String DEFAULT_BASE_URL = "https://api.kimss.ai";

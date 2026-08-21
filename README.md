@@ -1,46 +1,73 @@
-# Kimss Java SDK
+# Kimss Java — Secure AI Gateway
 
-[![Maven Central](https://img.shields.io/maven-central/v/ai.kimss/kimss-java)](https://central.sonatype.com/artifact/ai.kimss/kimss-java)
+[![Maven Central](https://img.shields.io/maven-central/v/ai.kimss/kimss-java?color=indigo)](https://central.sonatype.com/artifact/ai.kimss/kimss-java)
 [![License: MIT](https://img.shields.io/badge/License-MIT-indigo.svg)](LICENSE)
-[![CI](https://github.com/eyal81/kimss-java-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/eyal81/kimss-java-sdk/actions/workflows/ci.yml)
+[![CI](https://img.shields.io/badge/CI-purple?logo=github)](https://github.com/eyal81/kimss-java-sdk/actions/workflows/ci.yml)
 
-Your AI traffic is probably unmanaged: provider keys hardcoded in config files, services calling models directly, no record of who made which call and no way to stop the next one. That is **Shadow AI**.
+**Track, govern, and secure autonomous agents with exactly 1 line of code.**
 
-[Kimss](https://kimss.ai) is a **Secure AI Gateway** and **Governance Control Plane** that sits in front of the model endpoints you already own. This SDK is the Java integration layer: it routes your calls through the Kimss gateway (`X-Kimss-Key`), where every request gets identity, a governed audit trail, and a kill switch. Kimss never hosts your models and never charges for inference compute.
+[Kimss](https://kimss.ai) is a **Model-Agnostic Enterprise AI Gateway** and **Governance Control Plane**. Point the official OpenAI Java client at Kimss, add Agent ID headers, and every call is identified, audited, and kill-switchable — without rewriting your service. Kimss never hosts your models (**BYOI**).
 
-**30-second drop-in** (official OpenAI Java client):
+> **AI coding assistants:** read [AI_INTEGRATION.md](AI_INTEGRATION.md) first.
 
 ```java
 OpenAIClient client = OpenAIOkHttpClient.builder()
     .baseUrl("https://api.kimss.ai/v1")
-    .apiKey("kimss_...")
+    .apiKey(System.getenv("KIMSS_WORKSPACE_KEY"))
+    .putHeader("X-Kimss-Agent-Id", System.getenv("KIMSS_AGENT_ID"))
+    .putHeader("X-Kimss-Agent-Name", System.getenv().getOrDefault("KIMSS_AGENT_NAME", "My Agent"))
     .build();
 ```
 
-**Developer tier (Always Free):** 25,000 governed requests/month, 14-day telemetry, up to 5 workspace members. No credit card. [Get a key](https://kimss.ai/app/signup).
+**Developer tier (Always Free):** 25,000 governed requests/month · [Get a key](https://kimss.ai/app/signup)
 
 | Inbound | Vaulted BYO |
 |---------|-------------|
-| OpenAI Java client → `https://api.kimss.ai/v1` | OpenAI, Azure AI Foundry, Anthropic, DeepSeek, vLLM |
-| Native `KimssClient` → `https://api.kimss.ai` | Internal MCP servers |
-
-**New here?** [GETTING_STARTED.md](GETTING_STARTED.md). **AI assistants:** [docs/KIMSS_ONBOARDING.md](docs/KIMSS_ONBOARDING.md).
+| OpenAI Java → `https://api.kimss.ai/v1` + `X-Kimss-Agent-Id` | OpenAI, Azure AI Foundry, Anthropic, DeepSeek, vLLM |
 
 ```mermaid
 flowchart LR
-  App[Your app or agent] --> Proxy["Kimss Proxy (identity, audit, kill switch)"]
-  Proxy --> Model[Your model endpoint]
-  Proxy --> Mcp[Your MCP server]
+  App[Your_app] --> GW["Kimss_Gateway"]
+  GW --> Model[Vaulted_provider]
+  GW --> Trail[Governed_audit_trail]
 ```
 
-Source of truth: monorepo path `kimssApi/kimss_java_sdk/`. Public GitHub is a subtree mirror (same pattern as the Python SDK).
+---
 
-## Requirements
+## 3-step setup
 
-- JDK **11+**
-- Dependency: Jackson Databind (pulled transitively)
+### 1. Sign In & Vault
 
-## Installation
+Log into [Kimss AI](https://kimss.ai/app/signup). Vault your provider endpoint under **Governance → Connected Infrastructure**.
+
+### 2. Mint Key
+
+**Gateway → Generate Key**. Copy `kimss_...` once.
+
+### 3. Route Traffic (zero refactoring)
+
+Set `baseUrl` to `https://api.kimss.ai/v1`, pass the workspace key, inject `X-Kimss-Agent-Id` / `X-Kimss-Agent-Name`.
+
+More detail: [GETTING_STARTED.md](GETTING_STARTED.md).
+
+---
+
+## Control plane (DevOps)
+
+The `ai.kimss:kimss-java` artifact is **not** the inference path. Use REST + Governance UI:
+
+| Concern | How |
+|---------|-----|
+| Kill switch | UI or `POST /agent_set_status/` |
+| Audit | Gateway Recent calls; `POST /audit_log/` |
+| MCP sync | Control Plane registration UI |
+| Register agent | `POST /v1/agents/register` with `X-Kimss-Key` |
+
+`KimssClient.agents().run` and `models().create` are **`@Deprecated`**.
+
+---
+
+## Installation (optional legacy client)
 
 ### Maven
 
@@ -48,72 +75,18 @@ Source of truth: monorepo path `kimssApi/kimss_java_sdk/`. Public GitHub is a su
 <dependency>
   <groupId>ai.kimss</groupId>
   <artifactId>kimss-java</artifactId>
-  <version>0.1.2</version>
+  <version>0.2.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```kotlin
-implementation("ai.kimss:kimss-java:0.1.2")
+implementation("ai.kimss:kimss-java:0.2.0")
 ```
 
-> **To route traffic, you must create a free control plane namespace. [Get your API key at kimss.ai](https://kimss.ai/app/signup) (25,000 governed requests/mo included. No credit card).**
->
-> The Developer tier is always free — 25,000 governed requests/month, 14-day telemetry retention, no expiration cliff.
+Requirements: JDK **11+**. Example: [examples/GatewayProxyFirstCall.java](examples/GatewayProxyFirstCall.java).
 
-Local install from a clone (optional):
+## License
 
-```bash
-cd kimss_java_sdk
-mvn -q -DskipTests install
-```
-
-Or call the REST API with JDK `HttpClient` and header `X-Kimss-Key` (see Developer Hub **Java** tab).
-
-## Quick start
-
-```java
-import com.kimss.AgentRunResult;
-import com.kimss.KimssClient;
-
-// Uses KIMSS_API_KEY and optional KIMSS_BASE_URL
-KimssClient client = KimssClient.fromEnv();
-
-AgentRunResult result = client.agents().run("asst_...", "Hello from Java!");
-System.out.println(result.text());
-```
-
-Or explicitly:
-
-```java
-KimssClient client = KimssClient.builder()
-    .apiKey(System.getenv("KIMSS_API_KEY"))
-    .baseUrl("https://api.kimss.ai")
-    .build();
-```
-
-## Auth
-
-| Mode | Header |
-|------|--------|
-| API key (default) | `X-Kimss-Key: <key>` |
-
-Do **not** send Kimss API keys as `Authorization: Bearer`.
-
-## Preferred endpoints
-
-| Method | HTTP |
-|--------|------|
-| `client.agents().run(...)` | `POST /v1/agents/run` |
-| `client.models().create(...)` | `POST /v1/models/completions` |
-
-## Publish (maintainers)
-
-1. Claim / register Maven Central namespace `ai.kimss` (domain `kimss.ai`). `com.kimss` is not available — that namespace requires `kimss.com`.
-2. On first publish to the public mirror, copy `ci-templates/publish.yml` → `.github/workflows/publish.yml` and `ci-templates/ci.yml` → `.github/workflows/ci.yml` (requires a PAT with **`workflow`** scope; subtree mirror cannot push `.github/workflows` with deploy keys or OAuth tokens lacking that scope).
-3. Configure GitHub secrets on the public mirror for Central publishing + GPG.
-4. Tag `v0.1.2` on the public mirror to run publish.
-
-See monorepo `plans/2026-07-23-kimss-java-sdk-release-routine.md`.
-
+MIT — see [LICENSE](LICENSE).

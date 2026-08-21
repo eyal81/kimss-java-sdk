@@ -4,7 +4,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-indigo.svg)](LICENSE)
 [![CI](https://img.shields.io/badge/CI-purple?logo=github)](https://github.com/eyal81/kimss-java-sdk/actions/workflows/ci.yml)
 
-**Track, govern, and secure autonomous agents with exactly 1 line of code.**
+**Track, govern, and secure autonomous agents with exactly 1 line of code. Zero data-plane refactoring required.**
+
+Dual-listener inbound: OpenAI OkHttp at `https://api.kimss.ai/v1` or Anthropic Java client at `https://api.kimss.ai` + Agent-Id headers.
 
 [Kimss](https://kimss.ai) is a **Model-Agnostic Enterprise AI Gateway** and **Governance Control Plane**. Point the official OpenAI Java client at Kimss, add Agent ID headers, and every call is identified, audited, and kill-switchable — without rewriting your service. Kimss never hosts your models (**BYOI**).
 

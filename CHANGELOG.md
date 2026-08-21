@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Onboarding and getting-started docs match dual-listener inbound: Anthropic Java client at `https://api.kimss.ai`. Azure official clients remain vault-only.
+
 ## [0.2.0] — 2026-08-21
 
 ### Deprecated

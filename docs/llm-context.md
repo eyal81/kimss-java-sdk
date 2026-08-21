@@ -5,16 +5,29 @@ Pair with [AI_INTEGRATION.md](../AI_INTEGRATION.md), [README.md](../README.md), 
 ## Clean machine checklist
 
 1. JDK **11+**.
-2. For **inference**: official OpenAI Java OkHttp client → `baseUrl("https://api.kimss.ai/v1")` + Agent-Id headers. No Kimss SDK required.
+2. For **inference**: keep the native SDK. OpenAI Java OkHttp → `baseUrl("https://api.kimss.ai/v1")`. Anthropic Java → `baseUrl("https://api.kimss.ai")` (appends `/v1/messages`). Always send Agent-Id headers. No Kimss SDK required.
 3. Optional: Maven `ai.kimss:kimss-java` for legacy/control-plane residual only.
 4. Env: `KIMSS_WORKSPACE_KEY` or `KIMSS_API_KEY`, `KIMSS_AGENT_ID`.
 5. **Deprecated:** `KimssClient.agents().run`, `models().create`.
 
 ## Preferred inference
 
+**OpenAI**
+
 ```java
 OpenAIClient client = OpenAIOkHttpClient.builder()
     .baseUrl("https://api.kimss.ai/v1")
+    .apiKey(System.getenv("KIMSS_WORKSPACE_KEY"))
+    .putHeader("X-Kimss-Agent-Id", System.getenv("KIMSS_AGENT_ID"))
+    .putHeader("X-Kimss-Agent-Name", System.getenv().getOrDefault("KIMSS_AGENT_NAME", "My Agent"))
+    .build();
+```
+
+**Anthropic** (`baseUrl("https://api.kimss.ai")` — client appends `/v1/messages`)
+
+```java
+AnthropicClient client = AnthropicOkHttpClient.builder()
+    .baseUrl("https://api.kimss.ai")
     .apiKey(System.getenv("KIMSS_WORKSPACE_KEY"))
     .putHeader("X-Kimss-Agent-Id", System.getenv("KIMSS_AGENT_ID"))
     .putHeader("X-Kimss-Agent-Name", System.getenv().getOrDefault("KIMSS_AGENT_NAME", "My Agent"))

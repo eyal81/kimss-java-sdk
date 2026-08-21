@@ -8,13 +8,26 @@
 
 Dual-listener inbound: OpenAI OkHttp at `https://api.kimss.ai/v1` or Anthropic Java client at `https://api.kimss.ai` + Agent-Id headers.
 
-[Kimss](https://kimss.ai) is a **Model-Agnostic Enterprise AI Gateway** and **Governance Control Plane**. Point the official OpenAI Java client at Kimss, add Agent ID headers, and every call is identified, audited, and kill-switchable — without rewriting your service. Kimss never hosts your models (**BYOI**).
+[Kimss](https://kimss.ai) is a **Model-Agnostic Enterprise AI Gateway** and **Governance Control Plane**. Point the official OpenAI or Anthropic Java client at Kimss, add Agent ID headers, and every call is identified, audited, and kill-switchable — without rewriting your service. Kimss never hosts your models (**BYOI**).
 
 > **AI coding assistants:** read [AI_INTEGRATION.md](AI_INTEGRATION.md) first.
+
+**OpenAI**
 
 ```java
 OpenAIClient client = OpenAIOkHttpClient.builder()
     .baseUrl("https://api.kimss.ai/v1")
+    .apiKey(System.getenv("KIMSS_WORKSPACE_KEY"))
+    .putHeader("X-Kimss-Agent-Id", System.getenv("KIMSS_AGENT_ID"))
+    .putHeader("X-Kimss-Agent-Name", System.getenv().getOrDefault("KIMSS_AGENT_NAME", "My Agent"))
+    .build();
+```
+
+**Anthropic**
+
+```java
+AnthropicClient client = AnthropicOkHttpClient.builder()
+    .baseUrl("https://api.kimss.ai")
     .apiKey(System.getenv("KIMSS_WORKSPACE_KEY"))
     .putHeader("X-Kimss-Agent-Id", System.getenv("KIMSS_AGENT_ID"))
     .putHeader("X-Kimss-Agent-Name", System.getenv().getOrDefault("KIMSS_AGENT_NAME", "My Agent"))
@@ -26,6 +39,7 @@ OpenAIClient client = OpenAIOkHttpClient.builder()
 | Inbound | Vaulted BYO |
 |---------|-------------|
 | OpenAI Java → `https://api.kimss.ai/v1` + `X-Kimss-Agent-Id` | OpenAI, Azure AI Foundry, Anthropic, DeepSeek, vLLM |
+| Anthropic Java → `https://api.kimss.ai` (`/v1/messages`) | Internal MCP servers (Control Plane registration) |
 
 ```mermaid
 flowchart LR
@@ -48,7 +62,7 @@ Log into [Kimss AI](https://kimss.ai/app/signup). Vault your provider endpoint u
 
 ### 3. Route Traffic (zero refactoring)
 
-Set `baseUrl` to `https://api.kimss.ai/v1`, pass the workspace key, inject `X-Kimss-Agent-Id` / `X-Kimss-Agent-Name`.
+Point OpenAI at `https://api.kimss.ai/v1` or Anthropic at `https://api.kimss.ai`, pass the workspace key, inject `X-Kimss-Agent-Id` / `X-Kimss-Agent-Name`.
 
 More detail: [GETTING_STARTED.md](GETTING_STARTED.md).
 
